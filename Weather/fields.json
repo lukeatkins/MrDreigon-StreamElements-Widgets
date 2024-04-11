@@ -1,0 +1,146 @@
+{
+  "apikey": {
+    "type": "text",
+    "label": "API Key"
+  },
+  "location": {
+    "type": "text",
+    "label": "Weather Location"
+  },
+  "showLocation": {
+	"type": "dropdown",
+	"label": "Show Location?",
+	"value": "yes",
+	"options": {
+		"yes": "Yes",
+		"no": "No"
+	}
+  },
+  "showHumidity": {
+	"type": "dropdown",
+	"label": "Show Humidity?",
+	"value": "yes",
+	"options": {
+		"yes": "Yes",
+		"no": "No"
+	}
+  },
+  "showTemp": {
+	"type": "dropdown",
+	"label": "Show Temperature?",
+	"value": "yes",
+	"options": {
+		"yes": "Yes",
+		"no": "No"
+	}
+  },
+  "showForecast": {
+	"type": "dropdown",
+	"label": "Show Forecast Icon?",
+	"value": "yes",
+	"options": {
+		"yes": "Yes",
+		"no": "No"
+	}
+  },
+  "lblTemp": {
+    "type": "text",
+    "label": "Temperature Label",
+    "value": "Temp:"
+  },
+  "lblHumidity": {
+    "type": "text",
+    "label": "Humidity Label",
+    "value": "Humidity:"
+  },
+  "lblForecast": {
+    "type": "text",
+    "label": "Forecast Label",
+    "value": "Weather:"
+  },
+  "lblPosition": {
+	"type": "dropdown",
+	"label": "Label Position",
+	"value": "before",
+	"options": {
+		"before": "Before",
+		"after": "After"
+	}
+  },
+  "units": {
+	"type": "dropdown",
+	"label": "Units",
+	"value": "C",
+	"options": {
+		"C": "Celcius",
+		"F": "Fahrenheit",
+		"CF": "Both"
+	}
+  },
+  "rounding": {
+	"type": "number",
+	"label": "Temperature decimals",
+	"value": 1,
+	"step": 1
+  },
+  "textAlign": {
+    "label": "Text align",
+    "type": "dropdown",
+    "value": "left",
+    "options": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    }
+  },
+  "fontName": {
+    "type": "googleFont",
+    "label": "Font name",
+    "value": "Montserrat"
+  },
+  "dynamicFontSize": {
+    "type": "dropdown",
+    "label": "Font size",
+    "value": "static",
+    "options": {
+      "static": "Static - set below",
+      "dynamic": "Dynamic - fit container size"
+    }
+  },
+  "fontSize": {
+    "type": "number",
+    "label": "Font size",
+    "value": 24,
+	"step": 2
+  },
+  "spacing": {
+    "type": "number",
+    "label": "Spacing",
+    "value": 10,
+	"step": 2
+  },
+  "iconSize": {
+    "type": "number",
+    "label": "Icon Size",
+    "value": 32,
+	"step": 2
+  },
+  "fontWeight": {
+    "label": "Font Weight",
+    "type": "dropdown",
+    "value": "400",
+    "options": {
+      "100": "Thin (100)",
+      "300": "Light (300)",
+      "400": "Regular (400)",
+      "500": "Medium (500)",
+      "700": "Bold (700)",
+      "900": "Black (900)"
+    }
+  },
+  "fontColor": {
+    "type": "colorpicker",
+    "label": "Font Color",
+    "value": "rgba(255,255,255,1)"
+  }
+}

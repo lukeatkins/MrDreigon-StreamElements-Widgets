@@ -1,0 +1,234 @@
+{
+    "minValue": {
+      "type": "number",
+      "label": "Initial marathon value",
+      "value": 60,
+      "step": 0.1,
+      "group": "Marathon Settings"
+    },
+    "maxValue": {
+      "type": "number",
+      "label": "Maximum marathon value:",
+      "value": 5000,
+      "group": "Marathon Settings"
+    },
+    "preserveTime": {
+      "type": "dropdown",
+      "label": "Overlay reload behaviour",
+      "value": "ignore",
+      "options": {
+        "ignore": "Wait for start to be clicked",
+        "save": "Continue countdown",
+        "restart": "Restart countdown"
+      },
+      "group": "Marathon Settings"
+    },
+    "addOnZero": {
+      "type": "dropdown",
+      "label": "What should happen on reaching zero?",
+      "value": "wait",
+      "options": {
+        "stop": "Stop adding value for new events",
+        "add": "New events add keep adding value"
+      },
+      "group": "Marathon Settings"
+    },
+    "onComplete": {
+      "type": "text",
+      "label": "Message on complete",
+      "value": "Done!",
+      "group": "Marathon Settings"
+    },
+    "jebaitedToken": {
+      "type": "text",
+      "label": "Jebaited API Token for chat messages",
+      "value": null,
+      "group": "Marathon Settings"
+    },
+    "addCustom": {
+      "type": "button",
+      "label": "Add Custom",
+      "value": "Add Custom",
+      "group": "Controls"
+    },
+    "addCustomValue": {
+      "type": "number",
+      "label": "Value to add",
+      "value": 1,
+      "step": 0.01,
+      "group": "Controls"
+    },
+    "minusCustom": {
+      "type": "button",
+      "label": "Subtract Custom",
+      "value": "Subtract Custom",
+      "group": "Controls"
+    },
+    "minusCustomValue": {
+      "type": "number",
+      "label": "Value to subtract",
+      "value": 1,
+      "step": 0.01,
+      "group": "Controls"
+    },
+    "resetTimer": {
+      "type": "button",
+      "label": "Reset Marathon",
+      "value": "Reset Marathon",
+      "group": "Controls"
+    },
+    
+    "followWeight": {
+      "type": "number",
+      "label": "Units per follower:",
+      "value": 1,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "sub1Weight": {
+      "type": "number",
+      "label": "Units per T1/Prime subscriber:",
+      "value": 60,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "sub2Weight": {
+      "type": "number",
+      "label": "Units per T2 subscriber:",
+      "value": 120,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "sub3Weight": {
+      "type": "number",
+      "label": "Units per T3 subscriber:",
+      "value": 180,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "cheerWeight": {
+      "type": "number",
+      "label": "Units per 100 Bits:",
+      "value": 60,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "cheerMin": {
+      "type": "number",
+      "label": "Minimum bits to trigger:",
+      "value": 100,
+      "step": 1,
+      "group": "Event Weights"
+    },
+    "tipWeight": {
+      "type": "number",
+      "label": "Units multiplied by tip amount:",
+      "value": 300,
+      "step": 0.0001,
+      "group": "Event Weights"
+    },
+    "tipMin": {
+      "type": "number",
+      "label": "Minimum tip to trigger:",
+      "value": 1,
+      "step": 0.01,
+      "group": "Event Weights"
+    },
+    "hostWeight": {
+      "type": "number",
+      "label": "Units per viewer from host:",
+      "value": 1,
+      "step": 0.0001,
+      "group": "Event Weights"
+    },
+    "hostMin": {
+      "type": "number",
+      "label": "Minimum viewers in host:",
+      "value": 100,
+      "step": 1,
+      "group": "Event Weights"
+    },
+    "raidWeight": {
+      "type": "number",
+      "label": "Units per viewer from raid:",
+      "value": 0,
+      "step": 0.0001,
+      "group": "Event Weights"
+    },
+    "raidMin": {
+      "type": "number",
+      "label": "Minimum viewers in raid:",
+      "value": 100,
+      "step": 1,
+      "group": "Event Weights"
+    },
+    "formatDecimals": {
+      "type": "number",
+      "label": "Number format: decimal places",
+      "value": 1,
+      "step": 1,
+      "group": "Marathon Settings"
+    },
+    "formatUnits": {
+      "type": "text",
+      "label": "Number format: Units",
+      "value": " km",
+      "group": "Marathon Settings"
+    },
+    "textAlign": {
+      "label": "Text align",
+      "type": "dropdown",
+      "value": "left",
+      "options": {
+        "left": "Left",
+        "center": "Center",
+        "right": "Right"
+      },
+      "group": "Typography"
+    },
+    "fontName": {
+      "type": "text",
+      "label": "Font name",
+      "value": "Montserrat",
+      "group": "Typography"
+    },
+    "fontSize": {
+      "type": "number",
+      "label": "Font size",
+      "value": 24,
+      "group": "Typography"
+    },
+    "fontWeight": {
+      "label": "Font Weight",
+      "type": "dropdown",
+      "value": "400",
+      "options": {
+        "100": "Thin (100)",
+        "300": "Light (300)",
+        "400": "Regular (400)",
+        "500": "Medium (500)",
+        "700": "Bold (700)",
+        "900": "Black (900)"
+      },
+      "group": "Typography"
+    },
+    "fontColor": {
+      "type": "colorpicker",
+      "label": "Font Color",
+      "value": "rgba(255,255,255,1)",
+      "group": "Typography"
+    },
+    "strokeColor": {
+      "type": "colorpicker",
+      "label": "Stroke Color",
+      "value": "rgba(255,0,0,0)",
+      "group": "Typography"
+    },
+    "strokeSize": {
+      "type": "number",
+      "label": "Stroke size",
+      "value": 2,
+      "group": "Typography"
+    }
+  }
+  

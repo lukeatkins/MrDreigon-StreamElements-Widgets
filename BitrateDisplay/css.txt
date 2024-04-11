@@ -1,0 +1,6 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    color: {{fontColor}};
+    font-size: 14px;
+    overflow: hidden;
+}

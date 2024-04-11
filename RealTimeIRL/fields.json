@@ -1,0 +1,191 @@
+{
+    "jebaitedToken": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Jebaited API Token for chat messages",
+        "value": null
+    },
+
+    "discordLogWebhook": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook",
+        "value": null
+    },
+
+    "discordLogWebhookThreadId": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook Thread Id",
+        "value": null
+    },
+
+    "rtIRLAPIKey": {
+        "group": "Map Settings",
+        "type": "text",
+        "label": "Realtime IRL Pull Key",
+        "value": null
+    },
+
+	"mapTileLayer": {
+        "group": "Map Settings",
+        "type": "dropdown",
+        "label": "Map Tile Layer",
+        "value": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+		"options": {
+			"https://tile.openstreetmap.org/{z}/{x}/{y}.png": "Open Street Map",
+			"custom": "Custom"
+		}
+	},
+
+	"mapTileLayerCustom": {
+		"group": "Map Settings",
+		"type": "text",
+        "label": "Map Tile Layer URL (should contain '{z}/{x}/{y}')",
+        "value": null
+	},
+
+    "mapZoom": {
+        "group": "Map Settings",
+        "type": "number",
+        "label": "Map Zoom Level",
+        "value": 13,
+		"step": 1
+    },
+
+	"btnResetMapZoom": {
+        "group": "Map Settings",
+		"type": "button",
+		"label": "Reset Map Zoom",
+		"value": "Reset Map Zoom"
+	  },
+
+	"doZoomLoop": {
+        "group": "Map Settings",
+		"type": "checkbox",
+		"label": "Zoom in and out on timer",
+		"value": false
+	},
+
+	"mapZoomLocal": {
+        "group": "Map Settings",
+        "type": "number",
+        "label": "Local/Street Map Zoom Level",
+        "value": 16,
+		"step": 1
+    },
+
+	"mapZoomRegional": {
+        "group": "Map Settings",
+        "type": "number",
+        "label": "Regional Map Zoom Level",
+        "value": 8,
+		"step": 1
+    },
+
+	"iconURL": {
+        "group": "Map Settings",
+        "type": "text",
+        "label": "Icon Url",
+        "value": null
+	},
+
+	"iconScale": {
+        "group": "Map Settings",
+        "type": "number",
+        "label": "Icon Scale",
+        "value": 1,
+		"step": 0.05
+	},
+
+	"googleEarthIcon": {
+        "group": "Map Settings",
+        "type": "dropdown",
+        "label": "Google Earth Pin",
+        "value": "custom",
+		"options": {
+			"custom": "Custom URL",
+			"other": "Other Google Earth Icon",
+			"2000": "Default",
+			"2211": "Plus",
+			"2273": "Loops",
+			"2362": "Train",
+			"2050": "Bridges",
+			"2111": "Ramps",
+			"2371": "Truck",
+			"2361": "TrafficLight"
+		}
+	},
+
+    "googleEarthIconOther": {
+        "group": "Map Settings",
+        "type": "number",
+        "label": "Other Google Earth Icon (value from 2000+)",
+        "value": 2000,
+		"step": 1
+    },
+
+	"googleEarthIconColor": {
+        "group": "Map Settings",
+        "type": "colorpicker",
+        "label": "Google Earth Pin Color (Must be Hex)",
+        "value": "#943bf9"
+	},
+
+
+    "textAlign": {
+        "group": "Typography",
+        "label": "Text align",
+        "type": "dropdown",
+        "value": "left",
+        "options": {
+          "left": "Left",
+          "center": "Center",
+          "right": "Right"
+        }
+      },
+      "fontName": {
+        "group": "Typography",
+        "type": "text",
+        "label": "Font name",
+        "value": "Montserrat"
+      },
+      "fontSize": {
+        "group": "Typography",
+        "type": "number",
+        "label": "Font size",
+        "value": 24
+      },
+      "fontWeight": {
+        "group": "Typography",
+        "label": "Font Weight",
+        "type": "dropdown",
+        "value": "400",
+        "options": {
+          "100": "Thin (100)",
+          "300": "Light (300)",
+          "400": "Regular (400)",
+          "500": "Medium (500)",
+          "700": "Bold (700)",
+          "900": "Black (900)"
+        }
+      },
+      "fontColor": {
+        "group": "Typography",
+        "type": "colorpicker",
+        "label": "Font Color",
+        "value": "rgba(255,255,255,1)"
+      },
+      "strokeColor": {
+        "group": "Typography",
+        "type": "colorpicker",
+        "label": "Stroke Color",
+        "value": "rgba(255,0,0,0)"
+      },
+      "strokeSize": {
+        "group": "Typography",
+        "type": "number",
+        "label": "Stroke size",
+        "value": 2
+      }
+}

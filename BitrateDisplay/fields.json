@@ -1,0 +1,22 @@
+{
+  "statsURL": {
+    "type": "text",
+    "label": "Primary Stats URL",
+    "value": "http://jpy01.srt.irlkit.com:8080/stats/eXgN40M1SCRyJ9EJV0fu"
+  },
+  "statsURL2": {
+    "type": "text",
+    "label": "Secondary Stats URL",
+    "value": "http://slc01.rtmp.irlkit.com:8000/api/streams/live/eXgN40M1SCRyJ9EJV0fu"
+  },
+  "fontColor": {
+    "type": "colorpicker",
+    "label": "Font color",
+    "value": "rgb(255, 255, 255)"
+  },
+  "backgroundColor": {
+    "type": "colorpicker",
+    "label": "Background color",
+    "value": "rgba(36, 6, 73, 0.15)"
+  }
+}
