@@ -103,10 +103,10 @@ class DreigonWidget {
 			}
 			this.zoomLoop = setInterval(() => {
 				// Zoom out to a regional area
-				this.map.flyTo(this.map.getCenter(), this.config.mapZoomRegional, { duration: 2 }); // Adjust the zoom level for the regional area and duration
+				this.map.setZoom(this.config.mapZoomRegional, { duration: 2 }); // Adjust the zoom level for the regional area and duration
 				setTimeout(() => {
 					// Zoom back in to local roads
-					this.map.flyTo(this.map.getCenter(), this.config.mapZoomLocal, { duration: 1 }); // Adjust the zoom level for local roads and duration
+					this.map.setZoom(this.config.mapZoomLocal, { duration: 1 }); // Adjust the zoom level for local roads and duration
 				}, 20 * 1000); // Keep it at 5 seconds for the regional view
 			}, 50 * 1000);
 		}
