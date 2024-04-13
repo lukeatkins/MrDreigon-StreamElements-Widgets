@@ -1,34 +1,37 @@
 
 class DreigonWidget {
 
-    constructor() {
+    constructor(widgetName, storeKey) {
+		this.widgetName = widgetName;
         this.config = null;
         this.channel = null;
         this.channelId = null;
-        this.token = null;
-        this.storeKey = "Dreigon-Widget-Data"
-        this.commands = {
-        };
+        this.chatToken = null;
+        this.storeKey = storeKey
+        this.commands = {};
 
-        this.init();
+		this.logger = new DreigonLogger(widgetName);
+		this.log = this.logger.log,bind(this.logger);
+
+		this.init();
     }
 
     init() {
         window.addEventListener('onEventReceived', this.onEvent.bind(this));
         window.addEventListener('onWidgetLoad', (obj) => {
-            console.log(JSON.stringify(obj.detail.channel));
             this.channel = obj.detail.channel.username;
             this.channelId = obj.detail.channel.id;
             this.config = obj.detail.fieldData;
-            this.token = this.config.jebaitedToken;
-            this.loadState();
-            this.start();
+            this.chatToken = this.config.jebaitedToken;
+			if (this.config.discordLogWebhook) {
+				this.logger.enableDiscordLogging(this.config.discordLogWebhook, this.config.discordLogWebhookThreadId);
+			}
+            this.loadState(() => this.start());
         });
-
     }
 
     start() {
-       
+		this.log("Widget Started");		
     }
 
     onEvent(evt) {
@@ -85,9 +88,11 @@ class DreigonWidget {
     }
 
     onWidgetButton(id) {
-       switch (id) {
-
-       }
+		switch (id) {
+			case "btnResetMapZoom":
+				if (this.config.mapZoom) this.setZoom(this.config.mapZoom, false);
+				break;
+		}
     }
     
     onFollower(data) {
@@ -116,21 +121,25 @@ class DreigonWidget {
 
     serialize() {
         return {
-            
+            WidgetName: this.widgetName
         };
     }
 
     deserialize(data) {
-
     }
 
     saveState() {
         SE_API.store.set(this.storeKey, this.serialize());
     }
     
-    loadState() {
+    loadState(callback) {
         SE_API.store.get(this.storeKey).then(obj => {
-            this.deserialize();
+            this.deserialize(obj);
+			if (callback) callback();
+        })
+        .catch(err => {
+            this.saveState();
+			if (callback) callback(false);
         });
     }
 
@@ -150,14 +159,83 @@ class DreigonWidget {
     }
 
     sendMessage(msg) {
-        if (!this.token) return;
-        fetch(`https://api.jebaited.net/botMsg/${this.token}/${encodeURIComponent(msg.toString())}`).then(res => {
-            console.log("Message Sent: ", res);
+        if (!this.chatToken) return;
+        fetch(`https://api.jebaited.net/botMsg/${this.chatToken}/${encodeURIComponent(msg.toString())}`).then(res => {
+            this.log("Chat Message Sent: " + msg);
         }).catch(err => {
-            console.log("Error sending message: ", err);
+            this.log("Error sending chat message: " + err);
         });
     }
 
 }
 
-const app = new DreigonWidget();
+
+class DreigonLogger {
+	
+	constructor(widgetName) {
+		this.widgetName = widgetName;
+		this.lastLogMessageTS = 0;
+		this.logMessageRateLimit = 5000;
+		this.logQueue = [];
+		
+		if (this.logLoop) {
+			clearInterval(this.logLoop);
+			this.logLoop = null;
+		}
+		this.logLoop = setInterval(() => this.log(), 1000);
+	}
+
+	enableDiscordLogging(webhook, thread) {
+		this.webhook = webhook;
+		this.threadId = thread;
+	}
+
+	argsToString(args) {
+		return args.map(arg => {
+			if (typeof arg === 'function') {
+				return arg.toString(); // if it's a function, return its source code
+			} else {
+				return JSON.stringify(arg); // otherwise stringify normally
+			}
+		}).join(', '); // join arguments with commas
+	}
+
+	log() {
+		var args = Array.from(arguments);
+		if (args.length > 0) console.log(...args);
+		if (this.webhook) {
+			var elapsed = Date.now() - this.lastLogMessageTS;
+			if (args.length > 0) this.logQueue.push(`[${WidgetName}][${this.getTimestamp()}] ${this.argsToString(args)}`);
+			if (elapsed < this.logMessageRateLimit) return;
+			if (this.logQueue.length == 0) return;
+			var message = this.logQueue.join("\n");
+			this.logQueue = [];
+			this.lastLogMessageTS = Date.now();
+			var url = this.webhook;
+			if (this.threadId) url += "?thread_id=" + this.threadId;
+			fetch(url, {
+				method: "POST",
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({content: message}),
+			}).then(res => {
+
+			}).catch(err => {
+
+			});
+		}
+	}
+
+	getTimestamp() {
+		const date = new Date();
+		const formatter = new Intl.DateTimeFormat('en', {
+			day: 'numeric',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+		});
+		
+		return formatter.format(date);
+	}
+}
+

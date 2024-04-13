@@ -6,6 +6,20 @@
         "value": null
     },
 
+    "discordLogWebhook": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook",
+        "value": null
+    },
+
+    "discordLogWebhookThreadId": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook Thread Id",
+        "value": null
+    },
+
 
     "textAlign": {
         "group": "Typography",
