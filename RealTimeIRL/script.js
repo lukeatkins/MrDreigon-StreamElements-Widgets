@@ -62,7 +62,7 @@ class DreigonWidget {
         );
         this.tileLayer.addTo(this.map);
 		this.tileLayer.on("tileerror", err => {
-			this.log("Tile Error: " + err);
+			this.log("Tile Error: " + JSON.stringify(err));
 		});
 		var icon = `https://earth.google.com/earth/rpc/cc/icon?color=943bf9&id=2000&scale=4`;//fallback
 		if (this.config.googleEarthIcon == "custom") {
@@ -291,7 +291,7 @@ class DreigonWidget {
 		if (msg !== null) console.log(msg);
 		if (this.config && this.config.discordLogWebhook) {
 			var elapsed = Date.now() - this.lastLogMessageTS;
-			if (msg !== null) this.logQueue.push(`[${WidgetName}] ${msg}`);
+			if (msg !== null) this.logQueue.push(`[${WidgetName}][${getTimestamp()}] ${msg}`);
 			if (elapsed < this.logMessageRateLimit) return;
 			if (this.logQueue.length == 0) return;
 			var message = this.logQueue.join("\n");
@@ -311,6 +311,19 @@ class DreigonWidget {
 		}
 	}
 
+}
+
+function getTimestamp() {
+	const date = new Date();
+    const formatter = new Intl.DateTimeFormat('en', {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+    
+    return formatter.format(date);
 }
 
 const RTIRLConf = {
