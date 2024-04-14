@@ -1,0 +1,24 @@
+.Widget-Text {
+    font-family: '{{fontName}}', sans-serif;
+    color: {{fontColor}};
+    font-size: {{fontSize}}px;
+    font-weight: {{fontWeight}};
+    text-align:{{textAlign}};
+    -webkit-text-stroke-width: {{strokeSize}}px;
+    -webkit-text-stroke-color: {{strokeColor}};
+}
+body {
+	margin: 0px;
+}
+#widget {
+    height: 100%;
+    width: 100%;
+}
+#bitrateDisplay {
+    height: 100%;
+    width: 100%;
+}
+.Bitrate-Logo {
+    height: 100%;
+    width: 100%;
+}

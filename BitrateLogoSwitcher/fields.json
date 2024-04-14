@@ -1,0 +1,161 @@
+{
+	"widgetName": {
+        "group": "Info",
+		"label": "Widget Name",
+		"value": "Bitrate Logo Switcher"
+	},
+
+	"widgetAuthor": {
+        "group": "Info",
+		"label": "Author",
+		"value": "Luke Atkins - MrDreigon"
+	},
+
+    "jebaitedToken": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Jebaited API Token for chat messages",
+        "value": null
+    },
+
+    "discordLogWebhook": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook",
+        "value": null
+    },
+
+    "discordLogWebhookThreadId": {
+        "group": "Base Settings",
+        "type": "text",
+        "label": "Discord Logging WebHook Thread Id",
+        "value": null
+    },
+
+	"statsURL": {
+        "group": "Bitrate Settings",
+		"type": "text",
+		"label": "Primary Stats URL",
+		"value": ""
+	},
+
+	"statsURLId": {
+		"group": "Bitrate Settings",
+		"type": "text",
+		"label": "Primary Source Name",
+		"value": "Primary"
+	},
+	
+	"statsURLSecondary": {
+		"group": "Bitrate Settings",
+		"type": "text",
+		"label": "Secondary Stats URL",
+		"value": ""
+	},
+
+	"statsURLSecondaryId": {
+		"group": "Bitrate Settings",
+		"type": "text",
+		"label": "Secondary Source Name",
+		"value": "Secondary"
+	},
+
+	"bitrateOfflineText": {
+		"group": "Bitrate Format Settings",
+		"type": "text",
+		"label": "Offline Text",
+		"value": "Offline"
+	},
+
+	"bitrateLogos": {
+		"group": "Logo Settings",
+		"type": "image-input",
+		"multiple": true,
+		"label": "Bitrate Logos",
+		"value": null
+	},
+
+	"bitrateCutoffs": {
+		"group": "Logo Settings",
+		"type": "text",
+		"label": "Bitrate Cutoffs (comma delimited)",
+		"value": "0,1000,2000,4000"
+	},
+
+	"bitrateTextFormat": {
+		"group": "Bitrate Format Settings",
+		"type": "text",
+		"label": "Bitrate Text Format",
+		"value": "{Name}: {Bitrate}"
+	},
+
+	"formatDecimals": {
+		"group": "Bitrate Format Settings",
+		"type": "number",
+		"label": "Number format: decimal places",
+		"value": 0,
+		"step": 1
+	},
+	"formatUnits": {
+		"group": "Bitrate Format Settings",
+		"type": "text",
+		"label": "Number format: Units",
+		"value": " kb/s"
+	},
+
+    "textAlign": {
+        "group": "Typography",
+        "label": "Text align",
+        "type": "dropdown",
+        "value": "left",
+        "options": {
+          "left": "Left",
+          "center": "Center",
+          "right": "Right"
+        }
+      },
+      "fontName": {
+        "group": "Typography",
+        "type": "text",
+        "label": "Font name",
+        "value": "Montserrat"
+      },
+      "fontSize": {
+        "group": "Typography",
+        "type": "number",
+        "label": "Font size",
+        "value": 24
+      },
+      "fontWeight": {
+        "group": "Typography",
+        "label": "Font Weight",
+        "type": "dropdown",
+        "value": "400",
+        "options": {
+          "100": "Thin (100)",
+          "300": "Light (300)",
+          "400": "Regular (400)",
+          "500": "Medium (500)",
+          "700": "Bold (700)",
+          "900": "Black (900)"
+        }
+      },
+      "fontColor": {
+        "group": "Typography",
+        "type": "colorpicker",
+        "label": "Font Color",
+        "value": "rgba(255,255,255,1)"
+      },
+      "strokeColor": {
+        "group": "Typography",
+        "type": "colorpicker",
+        "label": "Stroke Color",
+        "value": "rgba(255,0,0,0)"
+      },
+      "strokeSize": {
+        "group": "Typography",
+        "type": "number",
+        "label": "Stroke size",
+        "value": 2
+      }
+}
