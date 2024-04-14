@@ -91,7 +91,8 @@ class DreigonWidget {
 				this.log("New Location:" + JSON.stringify(loc));
 				var coord = L.latLng(loc.latitude, loc.longitude);
 				this.gpsPin.setLatLng(coord);
-				this.map.panTo(coord, {duration: 1.5});
+				this.lastCoord = coord;
+				if (this.mapVisible) this.map.panTo(coord, {duration: 1.5});
 			});
         }
 		
@@ -102,6 +103,7 @@ class DreigonWidget {
 				this.zoomLoop = null;
 			}
 			this.zoomLoop = setInterval(() => {
+				if (!this.mapVisible) return;
 				// Zoom out to a regional area
 				this.map.setZoom(this.config.mapZoomRegional, { duration: 2 }); // Adjust the zoom level for the regional area and duration
 				setTimeout(() => {
@@ -259,6 +261,8 @@ class DreigonWidget {
 		if (visible) {
 			$("#map").show();
 			this.map.invalidateSize();
+			this.map.setZoom(this.currentZoom);
+			if (this.lastCoord) this.map.panTo(this.lastCoord);
 			if (chatMsg) this.sendMessage("Map Opened");
 			this.log("Map Opened");
 		} else {
@@ -283,7 +287,7 @@ class DreigonWidget {
 		else this.currentZoom = zoom;
 		if (this.currentZoom < 0) this.currentZoom = oldZoom;
 		this.saveState();
-		this.map.setZoom(this.currentZoom);
+		if (this.mapVisible) this.map.setZoom(this.currentZoom);
 		this.log(`Map Zoomed ${relative ? (negative ? "out by" : "in by") : "to"} ${zoom}`);
 	}
 
