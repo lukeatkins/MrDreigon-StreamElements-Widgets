@@ -103,12 +103,12 @@ class DreigonWidget {
 				this.zoomLoop = null;
 			}
 			this.zoomLoop = setInterval(() => {
-				if (!this.mapVisible) return;
+				if (!this.mapVisible || !this.lastCoord) return;
 				// Zoom out to a regional area
-				this.map.setZoom(this.config.mapZoomRegional, { duration: 2 }); // Adjust the zoom level for the regional area and duration
+				this.map.flyTo(this.lastCoord, this.config.mapZoomRegional, { animate: true, duration: 2 }); // Adjust the zoom level for the regional area and duration
 				setTimeout(() => {
 					// Zoom back in to local roads
-					this.map.setZoom(this.config.mapZoomLocal, { duration: 1 }); // Adjust the zoom level for local roads and duration
+					this.map.flyTo(this.lastCoord, this.config.mapZoomLocal, { animate: true, duration: 1 }); // Adjust the zoom level for local roads and duration
 				}, 20 * 1000); // Keep it at 5 seconds for the regional view
 			}, 50 * 1000);
 		}
@@ -288,7 +288,10 @@ class DreigonWidget {
 		else this.currentZoom = zoom;
 		if (this.currentZoom < 0) this.currentZoom = oldZoom;
 		this.saveState();
-		if (this.mapVisible) this.map.setZoom(this.currentZoom);
+		if (this.mapVisible) {
+			if (this.lastCoord) this.map.flyTo(this.lastCoord, this.currentZoom, {animate: true, duration: 1});
+			else this.map.setZoom(this.currentZoom, {animate: true, duration: 1});
+		}
 		this.log(`Map Zoomed ${relative ? (negative ? "out by" : "in by") : "to"} ${zoom}`);
 	}
 
