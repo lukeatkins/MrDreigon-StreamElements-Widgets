@@ -118,6 +118,8 @@ class DreigonWidget {
 			this.logLoop = null;
 		}
 		this.logLoop = setInterval(() => this.log(null), 1000);
+		
+		this.toggleMap(this.mapVisible, false);
     }
 
     onEvent(evt) {
@@ -215,22 +217,21 @@ class DreigonWidget {
     deserialize(data) {
 		this.currentZoom = data?.zoom ?? this.config.mapZoom;
 		this.mapVisible = data?.visible ?? true;
-		this.toggleMap(this.mapVisible, false);
     }
 
     saveState() {
-        SE_API.store.set(this.storeKey, this.serialize());
+		this.storeValue(this.storeKey, this.serialize(), res => {
+			if (!res.Success) this.log("Failed to Save State", res);
+		});
     }
     
-    loadState(callback) {
-        SE_API.store.get(this.storeKey).then(obj => {
-            this.deserialize(obj);
+    loadState(callback, firstTry = true) {
+		this.fetchValue(this.storeKey, res => {
+			if (!res.Success) return this.log("Failed to load state!", res);
+			this.deserialize(res.Value);
 			if (callback) callback();
-        })
-        .catch(err => {
-            this.saveState();
-			if (callback) callback(false);
-        });
+
+		});
     }
 
     handleMessage(evt) {
@@ -313,6 +314,49 @@ class DreigonWidget {
 
 			});
 		}
+	}
+	
+	storeValue(key, value, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "set",
+				Key: `${this.channel}-${key}`,
+				Value: value,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
+	}
+
+	fetchValue(key, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "get",
+				Key: `${this.channel}-${key}`,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
 	}
 
 }
