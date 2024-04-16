@@ -26,7 +26,8 @@ class DreigonWidget {
 			if (this.config.discordLogWebhook) {
 				this.logger.enableDiscordLogging(this.config.discordLogWebhook, this.config.discordLogWebhookThreadId);
 			}
-            this.loadState(() => this.start());
+            //this.loadState(() => this.start());
+			this.start();
         });
     }
 
@@ -137,19 +138,71 @@ class DreigonWidget {
     }
 
     saveState() {
-        SE_API.store.set(this.storeKey, this.serialize());
+		this.storeValue(this.storeKey, this.serialize(), res => {
+			if (!res.Success) this.log("Failed to Save State", res);
+		});
+        // SE_API.store.set(this.storeKey, this.serialize());
     }
     
     loadState(callback) {
-        SE_API.store.get(this.storeKey).then(obj => {
-            this.deserialize(obj);
+		this.fetchValue(this.storeKey, res => {
+			if (!res.Success) return this.log("Failed to load state!", res);
+			this.deserialize(res.Value);
 			if (callback) callback();
-        })
-        .catch(err => {
-            this.saveState();
-			if (callback) callback(false);
-        });
-    }
+
+		});
+        // SE_API.store.get(this.storeKey).then(obj => {
+        //     this.deserialize(obj);
+		// 	if (callback) callback();
+        // })
+        // .catch(err => {
+        //     this.saveState();
+		// 	if (callback) callback(false);
+        // });
+    }	
+	
+	storeValue(key, value, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "set",
+				Key: `${this.channel}-${key}`,
+				Value: value,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
+	}
+
+	fetchValue(key, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "get",
+				Key: `${this.channel}-${key}`,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
+	}
 
     handleMessage(evt) {
         var userState = { mod: parseInt(evt.tags.mod), broadcaster: evt.nick === this.channel };

@@ -174,11 +174,22 @@ class DreigonMarathonWidget {
     }
 
     saveState() {
-        SE_API.store.set(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue});
+		this.storeValue(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue}, res => {
+			if (!res.Success) console.log("Failed to Save State", res);
+		})
+        //SE_API.store.set(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue});
     }
     
+<<<<<<< HEAD
     loadState(callback) {
         SE_API.store.get(this.storeKey).then(obj => {
+=======
+    loadState() {
+		this.fetchValue(this.storeKey, res => {
+			if (!res.Success) return this.log("Failed to load state!", res);
+			var obj = res.Value;
+        // SE_API.store.get(this.storeKey).then(obj => {
+>>>>>>> fd76695b1b040e2d94aa998e9eecd8824a337180
             console.log("Load State", this.config.preserveTime)
             if (obj !== null) {
                 if (this.config.preserveTime === "save") {
@@ -204,6 +215,49 @@ class DreigonMarathonWidget {
             if (callback) callback();
         });
     }
+
+	storeValue(key, value, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "set",
+				Key: `${this.channel}-${key}`,
+				Value: value,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
+	}
+
+	fetchValue(key, callback) {
+		var req = {
+			Action: "Store",
+			Data: {
+				Query: "get",
+				Key: `${this.channel}-${key}`,
+			}
+		}
+		fetch(`https://beeboirl.hosthampster.com/api`, {
+			body: JSON.stringify(req),
+			method: "POST"
+		})
+		.then(res => res.json())
+		.then(res => {
+			return callback(res);
+		})
+		.catch(err => {
+			return callback({Success: false, Error: err});
+		});
+	}
 
     handleMessage(evt) {
         var userState = { mod: parseInt(evt.tags.mod), broadcaster: evt.nick === this.channel };
