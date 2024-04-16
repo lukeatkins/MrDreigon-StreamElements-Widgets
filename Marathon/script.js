@@ -32,8 +32,7 @@ class DreigonMarathonWidget {
             this.token = this.config.jebaitedToken;
             this.addOnZero = (this.config.addOnZero === "add");
             this.stopOnZero = (this.config.addOnZero === "stop");
-            this.loadState();
-            this.start();
+            this.loadState(() => this.start());
         });
 
     }
@@ -58,12 +57,12 @@ class DreigonMarathonWidget {
 
     updateDisplay() {
         var text = this.getFormattedValue();
-        if (this.currentValue === 0) text = this.config.onComplete;
+        if (this.currentValue === 0) text = this.config?.onComplete ?? "0.0 km";
         $("#countdown").html(text);
     }
 
     getFormattedValue(value = this.currentValue) {
-        var text = formatFloat(value, {decimals: this.config.formatDecimals, units: this.config.formatUnits});
+        var text = formatFloat(value, {decimals: this.config?.formatDecimals ?? 1, units: this.config?.formatUnits ?? " km"});
         return text;
     }
 
@@ -178,7 +177,7 @@ class DreigonMarathonWidget {
         SE_API.store.set(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue});
     }
     
-    loadState() {
+    loadState(callback) {
         SE_API.store.get(this.storeKey).then(obj => {
             console.log("Load State", this.config.preserveTime)
             if (obj !== null) {
@@ -202,6 +201,7 @@ class DreigonMarathonWidget {
                 this.currentValue = this.minValue;
                 this.addValue(0);
             }
+            if (callback) callback();
         });
     }
 
@@ -283,4 +283,4 @@ function formatFloat(val, params) {
 	}
 }
 
-const app = new DreigonWidget();
+const app = new DreigonMarathonWidget();
