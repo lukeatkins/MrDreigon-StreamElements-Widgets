@@ -180,16 +180,11 @@ class DreigonMarathonWidget {
         //SE_API.store.set(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue});
     }
     
-<<<<<<< HEAD
-    loadState(callback) {
-        SE_API.store.get(this.storeKey).then(obj => {
-=======
     loadState() {
 		this.fetchValue(this.storeKey, res => {
 			if (!res.Success) return this.log("Failed to load state!", res);
 			var obj = res.Value;
         // SE_API.store.get(this.storeKey).then(obj => {
->>>>>>> fd76695b1b040e2d94aa998e9eecd8824a337180
             console.log("Load State", this.config.preserveTime)
             if (obj !== null) {
                 if (this.config.preserveTime === "save") {
