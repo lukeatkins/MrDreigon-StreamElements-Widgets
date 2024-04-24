@@ -15,6 +15,11 @@ class DreigonWidget {
 			zoomin: (z) => this.setZoom(z ?? 1,true),
 			zoomout: (z) => this.setZoom(z ?? 1,true, true),
 			zoom: (z) => this.setZoom(z,false),
+			getdist: (id) => this.getDistance(id),
+			setdist: (id, val) => this.setDistance(id, val),
+			getdistall: () => this.getAllDistances(),
+			lockdist: (id) => this.lockDistanceTracker(id),
+			unlockdist: (id) => this.unlockDistanceTracker(id),
         };
 
 		this.zoomLevel = {
@@ -28,6 +33,9 @@ class DreigonWidget {
 
 		this.currentZoom;
 		this.mapVisible = true;
+		this.distances = {
+			total: 0
+		};
 
         this.init();
     }
@@ -91,6 +99,14 @@ class DreigonWidget {
 				this.log("New Location:" + JSON.stringify(loc));
 				var coord = L.latLng(loc.latitude, loc.longitude);
 				this.gpsPin.setLatLng(coord);
+				if (this.lastCoord) {
+					var distance = this.lastCoord.distanceTo(coord) / 1000;
+					for (var i in this.distances) {
+						if (typeof(this.distances[i]) == "object" && this.distances[i].lock) continue;
+						this.distances[i] += distance;
+					}
+					this.saveState();
+				}
 				this.lastCoord = coord;
 				if (this.mapVisible) this.map.panTo(coord, {duration: 1.5});
 			});
@@ -105,7 +121,7 @@ class DreigonWidget {
 			this.zoomLoop = setInterval(() => {
 				if (!this.mapVisible || !this.lastCoord) return;
 				// Zoom out to a regional area
-				this.map.flyTo(this.lastCoord, this.config.mapZoomRegional, { animate: true, duration: 2 }); // Adjust the zoom level for the regional area and duration
+				this.map.flyTo(this.lastCoord, this.config.mapZoomRegional, { animate: true, duration: 1 }); // Adjust the zoom level for the regional area and duration
 				setTimeout(() => {
 					// Zoom back in to local roads
 					this.map.flyTo(this.lastCoord, this.config.mapZoomLocal, { animate: true, duration: 1 }); // Adjust the zoom level for local roads and duration
@@ -211,12 +227,16 @@ class DreigonWidget {
         return {
             zoom: this.currentZoom,
 			visible: this.mapVisible,
+			distances: this.distances
         };
     }
 
     deserialize(data) {
 		this.currentZoom = data?.zoom ?? this.config.mapZoom;
 		this.mapVisible = data?.visible ?? true;
+		if (data.distances != undefined) {
+			this.distances = data.distances
+		}
     }
 
     saveState() {
@@ -295,6 +315,61 @@ class DreigonWidget {
 		this.log(`Map Zoomed ${relative ? (negative ? "out by" : "in by") : "to"} ${zoom}`);
 	}
 
+	getDistance(id) {
+		var key = this.distances[id] !== undefined ? id : "total";
+		var val = this.distances[key];
+		if (typeof(val) == "object") val = val.value;
+		this.sendMessage(`${key == "total" ? "Total" : "Distance " + key} is ${_.Formatters.float(val, {decimals: 1, units: " km"})}`);
+	}
+
+	getAllDistances() {
+		var message = `Total Distance ${_.Formatters.float(this.distances.total, {decimals: 1, units: " km"})}.`;
+		for (var i in this.distances) {
+			if (i == "total") continue;
+			var val = this.distances[i];
+			if (typeof(val) == "object") val = val.value;
+			message += ` ${i}: ${_.Formatters.float(val, {decimals: 1, units: " km"})}.`;
+		}
+		this.sendMessage(message);
+	}
+
+	lockDistanceTracker(id) {
+		if (this.distances[id] == undefined) return this.sendMessage(`Unknown Distance Tracker ${id}`);
+		if (id == "total") return this.sendMessage(`Can't lock total distance tracker`)
+		var val = this.distances[id];
+		if (typeof(val) == "object") val = val.value;
+		this.distances[id] = {
+			lock: true,
+			value: val,
+		};
+		this.saveState();
+		this.sendMessage(`Distance Tracker ${id} locked at ${_.Formatters.float(val, {decimals: 1, units: " km"})}`);
+	}
+
+	unlockDistanceTracker(id) {
+		if (this.distances[id] == undefined) return this.sendMessage(`Unknown Distance Tracker ${id}`);
+		// if (id == "total") return this.sendMessage(`Can't lock total distance tracker`)
+		
+		if (typeof(this.distances[id]) == "object") this.distances[id] = this.distances[id].value;
+		this.saveState();
+		this.sendMessage(`Distance Tracker ${id} unlocked`);
+	}
+
+	setDistance(id, value) {
+		if (!isNaN(id)) { //If Id is a number, (eg !setdist 10), use the total tracker and use id field as value
+			value = parseFloat(id);
+			id = "total";
+		} else {
+			if (value == undefined) return this.sendMessage("Value missing. Usage: !setdist <id> <value>");
+			if (isNaN(value)) return this.sendMessage("Invalid value. Usage: !setdist <id> <value>");
+			value = parseFloat(value);
+		}
+		if (typeof(this.distances[id]) == "object" && this.distances[id].lock == true) return this.sendMessage(`Distance Tracker ${id} is locked`);
+		this.distances[id] = value;
+		this.saveState();
+		this.sendMessage(`${id == "total" ? "Total" : "Distance " + id} set to ${_.Formatters.float(value, {decimals: 1, units: " km"})}`);
+	}
+
 	log(msg) {
 		if (msg !== null) console.log(msg);
 		if (this.config && this.config.discordLogWebhook) {
@@ -363,6 +438,50 @@ class DreigonWidget {
 	}
 
 }
+
+const _ = {
+	maxArray: (data) => {
+		var max = null;
+		data.forEach(v => {
+			if (v === null || v === undefined || isNaN(v)) return;
+			if (max === null || v > max) max = v;
+		});
+		return max;
+	},
+	
+	minArray: (data) => {
+		var min = null;
+		data.forEach(v => {
+			if (v === null || v === undefined || isNaN(v)) return;
+			if (min === null ||v < min) min = v;
+		});
+		return min;
+	},
+
+	Formatters: {
+		float: (val, params) => {
+			if (params == null) params = {};
+			if (val == null || isNaN(Number(val))) return val;
+			if (params.showZeros !== undefined) {
+				if (!params.showZeros && val === 0) return "-   ";
+			}
+			try {
+				let decimals = 2;
+				if (params.decimals !== undefined) decimals = params.decimals;
+				let text = Number(val).toLocaleString("en-AU", {
+					notation: "standard",
+					minimumFractionDigits: decimals,
+					maximumFractionDigits: decimals,
+				});
+				if (params.sign && val > 0) text = "+" + text;
+				if (params.units) text += `${params.unitSpace ? " " : ""}${params.units}`;
+				return text;
+			} catch (err) {
+				return `Error [${val}]`
+			}
+		}
+	},
+};
 
 function getTimestamp() {
 	const date = new Date();
