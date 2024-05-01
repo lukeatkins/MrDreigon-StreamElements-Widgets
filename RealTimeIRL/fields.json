@@ -132,6 +132,13 @@
         "value": "#943bf9"
 	},
 
+	"doLogLocation": {
+        "group": "Map Settings",
+		  "type": "checkbox",
+		"label": "Log Map Location",
+		"value": false
+	},
+
 
     "textAlign": {
         "group": "Typography",

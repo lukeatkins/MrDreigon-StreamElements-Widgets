@@ -96,7 +96,7 @@ class DreigonWidget {
 			this.rtirlAPI = new RTIRLAPI(this, pullKey);
 			this.rtirlAPI.start();
 			this.rtirlAPI.on("location", loc => {
-				this.log("New Location:" + JSON.stringify(loc));
+				if (this.config.doLogLocation) this.log("New Location:" + JSON.stringify(loc));
 				var coord = L.latLng(loc.latitude, loc.longitude);
 				this.gpsPin.setLatLng(coord);
 				if (this.lastCoord) {

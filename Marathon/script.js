@@ -18,6 +18,8 @@ class DreigonMarathonWidget {
             addmarathon: this.commandAddMarathon.bind(this),
             minusmarathon: this.commandMinusMarathon.bind(this),
         };
+		this.logger = new DreigonLogger("Marathon");
+		this.log = this.logger.log.bind(this.logger);
 
         this.init();
     }
@@ -32,6 +34,9 @@ class DreigonMarathonWidget {
             this.token = this.config.jebaitedToken;
             this.addOnZero = (this.config.addOnZero === "add");
             this.stopOnZero = (this.config.addOnZero === "stop");
+            if (this.config.discordLogWebhook) {
+				this.logger.enableDiscordLogging(this.config.discordLogWebhook, this.config.discordLogWebhookThreadId);
+			}
             this.loadState(() => this.start());
         });
 
@@ -41,6 +46,7 @@ class DreigonMarathonWidget {
         if (this.updateLoop) clearInterval(this.updateLoop);
         setInterval(this.updateDisplay.bind(this), 1000);
         this.updateDisplay();
+        this.log("Widget Started");
     }
 
     addValue(add) {
@@ -138,39 +144,55 @@ class DreigonMarathonWidget {
     }
     
     onFollower(data) {
+        var previous = this.currentValue;
         if (this.config.followSeconds !== 0) this.addValue(this.config.followWeight);
+        this.log(`New Follower (${this.getFormattedValue(this.config.followWeight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
-    onTier1Sub(data) {        
+    onTier1Sub(data) {    
+        var previous = this.currentValue;    
         if (this.config.sub1Weight !== 0) this.addValue(this.config.sub1Weight);
+        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub1Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
-    onTier2Sub(data) {        
+    onTier2Sub(data) {    
+        var previous = this.currentValue;    
         if (this.config.sub2Weight !== 0) this.addValue(this.config.sub2Weight);
+        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub2Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
-    onTier3Sub(data) {        
+    onTier3Sub(data) {    
+        var previous = this.currentValue;    
         if (this.config.sub3Weight !== 0) this.addValue(this.config.sub3Weight);
+        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub3Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onHostEvent(data) {
+        var previous = this.currentValue;
         if (data.amount < this.config.hostMin || this.config.hostWeight === 0) return;
         this.addValue(this.config.hostWeight * data.amount);
+        this.log(`Host for ${data.amount} viewers (${this.getFormattedValue(this.config.hostWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onRaidEvent(data) {
+        var previous = this.currentValue;
         if (data.amount < this.config.raidMin || this.config.raidWeight === 0) return;
         this.addValue(this.config.raidWeight * data.amount);
+        this.log(`Raid with ${data.amount} viewers (${this.getFormattedValue(this.config.raidWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onCheerEvent(data) {
+        var previous = this.currentValue;
         if (data.amount < this.config.cheerMin || this.config.cheerWeight === 0) return;
         this.addValue(parseFloat(this.config.cheerWeight * data.amount / 100));
+        this.log(`${data.amount} Bits (${this.getFormattedValue(parseFloat(this.config.cheerWeight * data.amount / 100))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onTipEvent(data) {
+        var previous = this.currentValue;
         if (data.amount < this.config.tipMin || this.config.tipWeight === 0) return;
         this.addValue(parseFloat(this.config.tipWeight * data.amount));
+        this.log(`$${_.Formatters.float(data.amount, {decimals: 2})} Tip (${this.getFormattedValue(parseFloat(this.config.tipWeight * data.amount))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     saveState() {
@@ -180,9 +202,9 @@ class DreigonMarathonWidget {
         //SE_API.store.set(this.storeKey, {current: this.currentValue, maxValue: this.maxValue, minValue: this.minValue});
     }
     
-    loadState() {
+    loadState(callback) {
 		this.fetchValue(this.storeKey, res => {
-			if (!res.Success) return this.log("Failed to load state!", res);
+			if (!res.Success) return console.log("Failed to load state!", res);
 			var obj = res.Value;
         // SE_API.store.get(this.storeKey).then(obj => {
             console.log("Load State", this.config.preserveTime)
@@ -276,6 +298,7 @@ class DreigonMarathonWidget {
         if (isNaN(value)) return;
         this.currentValue = value;
         this.sendMessage(`Marathon set to ${this.getFormattedValue()}`);
+        this.log(`CMD: Marathon set to ${this.getFormattedValue()}`);
         this.addValue(0);
     }
 
@@ -286,6 +309,7 @@ class DreigonMarathonWidget {
         if (isNaN(value)) return;
         this.currentValue += value;
         this.sendMessage(`Added ${this.getFormattedValue(value)} to Marathon`);
+        this.log(`CMD: Added ${this.getFormattedValue(value)} to Marathon`);
         this.addValue(0);
     }
 
@@ -296,6 +320,7 @@ class DreigonMarathonWidget {
         if (isNaN(value)) return;
         this.currentValue -= value;
         this.sendMessage(`Subtracted ${this.getFormattedValue(value)} from Marathon`);
+        this.log(`CMD: Subtracted ${this.getFormattedValue(value)} from Marathon`);
         this.addValue(0);
     }
 
@@ -309,6 +334,119 @@ class DreigonMarathonWidget {
     }
 
 }
+
+class DreigonLogger {
+	
+	constructor(widgetName) {
+		this.widgetName = widgetName;
+		this.lastLogMessageTS = 0;
+		this.logMessageRateLimit = 5000;
+		this.logQueue = [];
+		
+		if (this.logLoop) {
+			clearInterval(this.logLoop);
+			this.logLoop = null;
+		}
+		this.logLoop = setInterval(() => this.log(), 1000);
+	}
+
+	enableDiscordLogging(webhook, thread) {
+		this.webhook = webhook;
+		this.threadId = thread;
+	}
+
+	argsToString(args) {
+		return args.map(arg => {
+			if (typeof arg === 'function') {
+				return arg.toString(); // if it's a function, return its source code
+			} else {
+				return JSON.stringify(arg); // otherwise stringify normally
+			}
+		}).join(', '); // join arguments with commas
+	}
+
+	log() {
+		var args = Array.from(arguments);
+		if (args.length > 0) console.log(...args);
+		if (this.webhook) {
+			var elapsed = Date.now() - this.lastLogMessageTS;
+			if (args.length > 0) this.logQueue.push(`[${this.widgetName}][${this.getTimestamp()}] ${this.argsToString(args)}`);
+			if (elapsed < this.logMessageRateLimit) return;
+			if (this.logQueue.length == 0) return;
+			var message = this.logQueue.join("\n");
+			this.logQueue = [];
+			this.lastLogMessageTS = Date.now();
+			var url = this.webhook;
+			if (this.threadId) url += "?thread_id=" + this.threadId;
+			fetch(url, {
+				method: "POST",
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({content: message}),
+			}).then(res => {
+
+			}).catch(err => {
+
+			});
+		}
+	}
+
+	getTimestamp() {
+		const date = new Date();
+		const formatter = new Intl.DateTimeFormat('en', {
+			day: 'numeric',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+		});
+		
+		return formatter.format(date);
+	}
+}
+
+const _ = {
+	maxArray: (data) => {
+		var max = null;
+		data.forEach(v => {
+			if (v === null || v === undefined || isNaN(v)) return;
+			if (max === null || v > max) max = v;
+		});
+		return max;
+	},
+	
+	minArray: (data) => {
+		var min = null;
+		data.forEach(v => {
+			if (v === null || v === undefined || isNaN(v)) return;
+			if (min === null ||v < min) min = v;
+		});
+		return min;
+	},
+
+	Formatters: {
+		float: (val, params) => {
+			if (params == null) params = {};
+			if (val == null || isNaN(Number(val))) return val;
+			if (params.showZeros !== undefined) {
+				if (!params.showZeros && val === 0) return "-   ";
+			}
+			try {
+				let decimals = 2;
+				if (params.decimals !== undefined) decimals = params.decimals;
+				let text = Number(val).toLocaleString("en-AU", {
+					notation: "standard",
+					minimumFractionDigits: decimals,
+					maximumFractionDigits: decimals,
+				});
+				if (params.sign && val > 0) text = "+" + text;
+				if (params.units) text += `${params.unitSpace ? " " : ""}${params.units}`;
+				return text;
+			} catch (err) {
+				return `Error [${val}]`
+			}
+		}
+	},
+};
 
 function formatFloat(val, params) {
 	if (params == null) params = {};

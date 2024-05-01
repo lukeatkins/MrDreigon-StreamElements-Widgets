@@ -1,4 +1,28 @@
 {
+  
+
+  "discordLogWebhook": {
+    "group": "Base Settings",
+    "type": "text",
+    "label": "Discord Logging WebHook",
+    "value": null
+  },
+
+  "discordLogWebhookThreadId": {
+      "group": "Base Settings",
+      "type": "text",
+      "label": "Discord Logging WebHook Thread Id",
+      "value": null
+  },
+
+  
+  "jebaitedToken": {
+    "type": "text",
+    "label": "Jebaited API Token for chat messages",
+    "value": null,
+    "group": "Base Settings"
+  },
+
     "minValue": {
       "type": "number",
       "label": "Initial marathon value",
@@ -37,12 +61,6 @@
       "type": "text",
       "label": "Message on complete",
       "value": "Done!",
-      "group": "Marathon Settings"
-    },
-    "jebaitedToken": {
-      "type": "text",
-      "label": "Jebaited API Token for chat messages",
-      "value": null,
       "group": "Marathon Settings"
     },
     "addCustom": {
