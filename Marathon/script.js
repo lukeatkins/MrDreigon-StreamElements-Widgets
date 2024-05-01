@@ -146,53 +146,53 @@ class DreigonMarathonWidget {
     onFollower(data) {
         var previous = this.currentValue;
         if (this.config.followSeconds !== 0) this.addValue(this.config.followWeight);
-        this.log(`New Follower (${this.getFormattedValue(this.config.followWeight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`New Follower "${data.name}" (${this.getFormattedValue(this.config.followWeight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onTier1Sub(data) {    
         var previous = this.currentValue;    
         if (this.config.sub1Weight !== 0) this.addValue(this.config.sub1Weight);
-        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub1Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`Tier 1 Sub "${data.name}" (${this.getFormattedValue(this.config.sub1Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onTier2Sub(data) {    
         var previous = this.currentValue;    
         if (this.config.sub2Weight !== 0) this.addValue(this.config.sub2Weight);
-        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub2Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`Tier 2 Sub "${data.name}" (${this.getFormattedValue(this.config.sub2Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onTier3Sub(data) {    
         var previous = this.currentValue;    
         if (this.config.sub3Weight !== 0) this.addValue(this.config.sub3Weight);
-        this.log(`Tier 1 Sub (${this.getFormattedValue(this.config.sub3Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`Tier 3 Sub "${data.name}" (${this.getFormattedValue(this.config.sub3Weight)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onHostEvent(data) {
         var previous = this.currentValue;
         if (data.amount < this.config.hostMin || this.config.hostWeight === 0) return;
         this.addValue(this.config.hostWeight * data.amount);
-        this.log(`Host for ${data.amount} viewers (${this.getFormattedValue(this.config.hostWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`Host for ${data.amount} viewers "${data.name}" (${this.getFormattedValue(this.config.hostWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onRaidEvent(data) {
         var previous = this.currentValue;
         if (data.amount < this.config.raidMin || this.config.raidWeight === 0) return;
         this.addValue(this.config.raidWeight * data.amount);
-        this.log(`Raid with ${data.amount} viewers (${this.getFormattedValue(this.config.raidWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`Raid with ${data.amount} viewers "${data.name}" (${this.getFormattedValue(this.config.raidWeight * data.amount)}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onCheerEvent(data) {
         var previous = this.currentValue;
         if (data.amount < this.config.cheerMin || this.config.cheerWeight === 0) return;
         this.addValue(parseFloat(this.config.cheerWeight * data.amount / 100));
-        this.log(`${data.amount} Bits (${this.getFormattedValue(parseFloat(this.config.cheerWeight * data.amount / 100))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`${data.amount} Bits "${data.name}" (${this.getFormattedValue(parseFloat(this.config.cheerWeight * data.amount / 100))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     onTipEvent(data) {
         var previous = this.currentValue;
         if (data.amount < this.config.tipMin || this.config.tipWeight === 0) return;
         this.addValue(parseFloat(this.config.tipWeight * data.amount));
-        this.log(`$${_.Formatters.float(data.amount, {decimals: 2})} Tip (${this.getFormattedValue(parseFloat(this.config.tipWeight * data.amount))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
+        this.log(`$${_.Formatters.float(data.amount, {decimals: 2})} Tip "${data.name}" (${this.getFormattedValue(parseFloat(this.config.tipWeight * data.amount))}). Old Value: ${this.getFormattedValue(previous)}, New Value: ${this.getFormattedValue(this.currentValue)}`);
     }
 
     saveState() {
