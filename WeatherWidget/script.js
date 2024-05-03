@@ -387,4 +387,104 @@ const _ = {
 	},
 };
 
-const app = new DreigonWidget();
+
+
+
+const WeatherAPI = "https://api.openweathermap.org/data/2.5/weather";
+const WeatherFormat = "<div>{location}</div> <div>{celcius} | {farenheight}</div> <div>{humidity} 💦</div> <div>{forecast}</div>";
+
+class DreigonWeather extends DreigonWidget {
+
+	constructor() {
+		super("Dreigon Weather", "dreigonweather");
+		this.root = document.getElementById("Weather-Text");
+		this.commands.setlocation = this.cmdSetLocation.bind(this);
+	}
+	
+	start() {
+		super.start();
+		this.fetchWeather();
+		this.fetchLoop = setInterval(this.fetchWeather.bind(this), this.config.fetchIntervalMins * 60 * 1000);
+	}
+
+	serialize() {
+		return {
+			Location: this.location,
+		};
+	}
+
+	deserialize(data) {
+		this.location = data?.Location ?? this.config.weatherLocation;
+	}
+
+	fetchWeather() {
+		if (!this.config.weatherAPIKey || !this.location) return;
+		var url = new URL(WeatherAPI);
+		url.searchParams.append("q", this.location);
+		url.searchParams.append("appid", this.config.weatherAPIKey);
+		url.searchParams.append("units", "metric");
+		fetch(url)
+		.then(res => res.json())
+		.then(data => this.displayWeather(data))
+		.catch(err => {
+			this.log("Error fetching weather!", err);
+		});
+	}
+
+	displayWeather(data) {
+		if (data?.message == "city not found") return;
+		var weather = {
+			location: data.name,
+			celcius: _.Formatters.float(data.main.temp, {decimals: this.config.temperatureDecimals, units: "&deg;C"}),
+			farenheight: _.Formatters.float(C2F(data.main.temp), {decimals: this.config.temperatureDecimals, units: "&deg;F"}),
+			humidity: _.Formatters.float(data.main.humidity, {decimals: this.config.humidityDecimals, units: "%"}),
+			forecast: `<img src="https://openweathermap.org/img/w/${data.weather[0].icon}.png" class="Weather-Forecast" />`,
+		}
+		this.log("Weather Update: ", weather.celcius, weather.farenheight, weather.humidity);
+		var html = this.replacePlaceholders(this.config.weatherFormatString, weather);
+		this.root.innerHTML = html;
+	}
+
+	replacePlaceholders(inputString, data) {
+		// Find all placeholders within curly braces
+		const regex = /\{([^}]+)\}/g;
+		const matches = inputString.match(regex);
+	
+		if (!matches) return inputString;
+	
+		// Replace each placeholder with its corresponding value
+		for (const match of matches) {
+			const key = match.slice(1, -1); // Remove curly braces
+			if (data.hasOwnProperty(key)) {
+				inputString = inputString.replace(match, data[key]);
+			}
+		}
+	
+		return inputString;
+	}
+
+	onWidgetButton(id) {
+		switch(id) {
+			case "resetWeatherLocation":
+				this.location = this.config.weatherLocation;
+				this.fetchWeather();
+				this.saveState();
+				break;
+		}
+	}
+
+	cmdSetLocation() {
+		var location = Array.from(arguments).join(" ");
+		if (location.length == 0) return;
+		this.location = location;
+		this.saveState();
+		this.fetchWeather();
+	}
+
+}
+
+function C2F(c) {
+	return (c * 9/5) + 32;
+}
+
+const app = new DreigonWeather();

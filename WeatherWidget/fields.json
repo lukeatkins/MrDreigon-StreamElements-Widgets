@@ -38,6 +38,61 @@
         "value": null
     },
 
+	"weatherLocation": {
+		"group": "Weather Settings",
+		"type": "text",
+		"label": "Weather Location"
+	},
+	
+    "resetWeatherLocation": {
+		"group": "Weather Settings",
+		"type": "button",
+		"label": "Reset Location",
+		"value": "Reset Location"
+	},
+
+	"weatherAPIKey": {
+		"group": "Weather Settings",
+		"type": "text",
+		"label": "Open Weather Map API Key (https://api.openweathermap.org)"
+	},
+
+	"weatherFormatString": {
+		"group": "Weather Settings",
+		"type": "text",
+		"label": "Format String",
+		"value": "<div>{location}</div> <div>{celcius} | {farenheight}</div> <div>{humidity} 💦</div> <div>{forecast}</div>"
+	},
+
+	"temperatureDecimals": {
+		"group": "Weather Settings",
+		"type": "number",
+		"label": "Temperature Decimals",
+		"value": 1,
+		"step": 1,
+		"min": 0,
+		"max": 5
+	},
+
+	"humidityDecimals": {
+		"group": "Weather Settings",
+		"type": "number",
+		"label": "Humidity Decimals",
+		"value": 1,
+		"step": 1,
+		"min": 0,
+		"max": 5
+	},
+
+	"fetchIntervalMins": {
+		"group": "Weather Settings",
+		"type": "number",
+		"label": "Weather Update Interval (minutes)",
+		"value": 10,
+		"step": 0.5,
+		"min": 1,
+		"max": 60
+	},
 
     "textAlign": {
         "group": "Typography",
