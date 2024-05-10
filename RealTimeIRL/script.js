@@ -517,7 +517,8 @@ class RTIRLAPI {
 	}
 
 	start() {
-		this.ws = new WebSocket(`wss://s-usc1a-nss-2007.firebaseio.com/.ws?v=${RTIRLConf.Version}&p=${RTIRLConf.App_Id}&ns=${RTIRLConf.Namespace}`);
+		//Firebase URL sometimes changes?
+		this.ws = new WebSocket(`wss://s-usc1a-nss-2006.firebaseio.com/.ws?v=${RTIRLConf.Version}&p=${RTIRLConf.App_Id}&ns=${RTIRLConf.Namespace}`);
 		this.ws.addEventListener("open", evt => {
 			this.connected = true;
 			this.sendMessage({ a: "s",	b: { c: { "sdk.js.9-8-1": 1 } } }, res => {
