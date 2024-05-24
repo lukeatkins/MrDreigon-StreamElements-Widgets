@@ -500,6 +500,7 @@ const RTIRLConf = {
 	Namespace: "rtirl-a1d7f-default-rtdb",
 	App_Id: "1:684852107701:web:d77a8ed0ee5095279a61fc",
 	Version: 5,
+	Default_Host: "s-usc1a-nss-2006.firebaseio.com",
 }
 
 class RTIRLAPI {
@@ -514,11 +515,12 @@ class RTIRLAPI {
 			location: [],
 		};
 		this.connected = false;
+		this.host = RTIRLConf.Default_Host;
 	}
 
 	start() {
 		//Firebase URL sometimes changes?
-		this.ws = new WebSocket(`wss://s-usc1a-nss-2006.firebaseio.com/.ws?v=${RTIRLConf.Version}&p=${RTIRLConf.App_Id}&ns=${RTIRLConf.Namespace}`);
+		this.ws = new WebSocket(`wss://${this.host}/.ws?v=${RTIRLConf.Version}&p=${RTIRLConf.App_Id}&ns=${RTIRLConf.Namespace}`);
 		this.ws.addEventListener("open", evt => {
 			this.connected = true;
 			this.sendMessage({ a: "s",	b: { c: { "sdk.js.9-8-1": 1 } } }, res => {
@@ -565,7 +567,13 @@ class RTIRLAPI {
 				if (listener && this.callbacks[listener]) {
 					this.callbacks[listener](res.d.b);
 				} else {
-					//this.widget.log("Generic Response: ", JSON.stringify(res.d));
+					if (typeof(res?.d?.d) == "string" && res?.d?.d?.startsWith("s-usc1a")) {
+						var host = res.d.d;
+						this.widget.log("New Host: " + host);
+						this.host = host;
+					} else {
+						//this.widget.log("Generic Response: ", JSON.stringify(res.d));
+					}
 				}
 			}
 		} catch(err) {
